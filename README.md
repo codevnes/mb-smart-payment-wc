@@ -19,8 +19,7 @@ mb-smart-payment-wc/
 ├── assets/                          # Tài nguyên frontend
 │   ├── vue-modern.js                # Vue.js 3 components với Element Plus
 │   ├── element-theme.css            # Custom Element Plus theme
-│   ├── admin.css                    # Legacy admin styles
-│   ├── admin.js                     # Legacy admin scripts
+│   ├── frontend.js                  # Frontend JavaScript cho checkout
 │   └── mbbank.svg                   # Icon MBBank
 ├── includes/                        # Code chính
 │   ├── class-mbspwc-admin.php       # Giao diện admin chính

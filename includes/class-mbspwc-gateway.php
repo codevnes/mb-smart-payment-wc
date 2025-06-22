@@ -216,7 +216,46 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
      */
     public function frontend_styles() {
         if ( is_wc_endpoint_url( 'order-received' ) ) {
-            wp_enqueue_style( 'mbspwc-frontend', MBSPWC_URL . 'assets/frontend.css', [], MBSPWC_VERSION );
+            // Add minimal inline CSS for QR code display
+            wp_add_inline_style( 'woocommerce-general', '
+                .mbsp-qr-container { 
+                    text-align: center; 
+                    margin: 20px 0; 
+                    padding: 20px; 
+                    border: 2px solid #0073aa; 
+                    border-radius: 8px; 
+                    background: #f9f9f9; 
+                }
+                .mbsp-qr-code { 
+                    max-width: 200px; 
+                    height: auto; 
+                    margin: 10px auto; 
+                    display: block; 
+                }
+                .mbsp-payment-info { 
+                    font-family: monospace; 
+                    background: #fff; 
+                    padding: 15px; 
+                    border-radius: 4px; 
+                    margin: 10px 0; 
+                }
+                .mbsp-status-check { 
+                    margin-top: 15px; 
+                }
+                .mbsp-status-check button { 
+                    background: #0073aa; 
+                    color: white; 
+                    border: none; 
+                    padding: 10px 20px; 
+                    border-radius: 4px; 
+                    cursor: pointer; 
+                }
+                .mbsp-status-check button:hover { 
+                    background: #005a87; 
+                }
+            ' );
+            
+            // Load JavaScript for frontend functionality
             wp_enqueue_script( 'mbspwc-frontend', MBSPWC_URL . 'assets/frontend.js', [ 'jquery' ], MBSPWC_VERSION, true );
             
             // Localize script for AJAX

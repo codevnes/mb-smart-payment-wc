@@ -72,11 +72,11 @@ Không cần thực hiện thêm bước nào - giao diện Vue.js sẽ được
 - Accessibility support
 - Internationalization ready
 
-### **Custom CSS Theme**
-- Brand-specific color scheme
-- Gradient backgrounds
-- Modern typography
-- Professional spacing
+### **Minimal CSS Approach**
+- Element Plus provides all UI styling
+- Custom theme for brand colors and gradients
+- Inline CSS for frontend QR display
+- No additional CSS files needed
 
 ## Performance
 
@@ -146,8 +146,9 @@ cp -r mb-smart-payment-wc /path/to/wordpress/wp-content/plugins/
 
 ### **Customization**
 - Edit `assets/vue-modern.js` cho Vue components
-- Edit `assets/element-theme.css` cho styling
+- Edit `assets/element-theme.css` cho Element Plus theme
 - Modify `includes/class-mbspwc-ajax.php` cho API endpoints
+- Frontend styling via inline CSS in gateway class
 
 ### **Building**
 Không cần build process - files được load trực tiếp từ CDN và local assets.
