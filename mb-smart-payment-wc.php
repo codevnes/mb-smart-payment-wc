@@ -44,6 +44,9 @@ add_action( 'plugins_loaded', function () {
     require_once MBSPWC_PATH . 'includes/class-mbspwc-cron.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-settings.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-vietqr.php';
+    require_once MBSPWC_PATH . 'includes/class-mbspwc-transactions.php';
+
+    MBSPWC_Transactions_Admin::init();
 
     // Đăng ký gateway với WooCommerce
     add_filter( 'woocommerce_payment_gateways', function ( $methods ) {

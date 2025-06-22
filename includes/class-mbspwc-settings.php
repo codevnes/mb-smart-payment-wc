@@ -30,6 +30,9 @@ class MBSPWC_Settings {
 
         add_settings_field( 'user', __( 'User', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'user' ] );
         add_settings_field( 'pass', __( 'Password', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_password' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'pass' ] );
+        // Account info
+        add_settings_field( 'acc_no', __( 'Số tài khoản', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'acc_no' ] );
+        add_settings_field( 'acc_name', __( 'Chủ tài khoản', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'acc_name' ] );
     }
 
     public static function field_text( $args ) {
