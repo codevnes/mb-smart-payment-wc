@@ -279,194 +279,184 @@
 
 /* Frontend Payment Form Styles */
 .mbsp-payment-info {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 16px;
-    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 24px;
     margin: 20px 0;
-    color: white;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.mbsp-payment-info::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-    transform: rotate(45deg);
-    animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    color: #2c3e50;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .mbsp-payment-header {
-    text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #f1f3f4;
+    padding-bottom: 16px;
 }
 
 .mbsp-payment-header h3 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
+    margin: 0 0 8px 0;
+    font-size: 20px;
     font-weight: 600;
-    color: white;
+    color: #2c3e50;
 }
 
 .mbsp-payment-header p {
     margin: 0;
-    opacity: 0.9;
-    font-size: 16px;
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .mbsp-payment-content {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 30px;
-    align-items: center;
+    gap: 24px;
+    align-items: start;
 }
 
 .mbsp-payment-details {
     display: grid;
-    gap: 15px;
+    gap: 12px;
 }
 
 .mbsp-payment-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255,255,255,0.1);
-    padding: 15px 20px;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.mbsp-payment-item:last-child {
+    border-bottom: none;
 }
 
 .mbsp-payment-item label {
     font-weight: 500;
     margin: 0;
-    opacity: 0.9;
+    color: #495057;
+    font-size: 14px;
+    min-width: 120px;
 }
 
 .mbsp-payment-item .value {
     font-weight: 600;
-    font-size: 16px;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
-    padding: 8px 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 14px;
+    color: #2c3e50;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
     user-select: all;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: 'Courier New', monospace;
 }
 
 .mbsp-payment-item .value:hover {
-    background: rgba(255,255,255,0.3);
-    transform: scale(1.02);
+    background: #e9ecef;
+    border-color: #dee2e6;
 }
 
 .mbsp-payment-item .amount {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
-    color: #FFD700;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    color: #28a745;
+    font-family: inherit;
 }
 
 .mbsp-qr-section {
     text-align: center;
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
 }
 
 .mbsp-qr-section h4 {
-    margin: 0 0 15px 0;
-    color: #333;
-    font-size: 18px;
+    margin: 0 0 12px 0;
+    color: #495057;
+    font-size: 14px;
     font-weight: 600;
 }
 
 .mbsp-qr-code {
     display: inline-block;
-    padding: 15px;
+    padding: 8px;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    border: 3px solid #f0f0f0;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
 }
 
 .mbsp-qr-code img {
     display: block;
-    max-width: 200px;
+    max-width: 160px;
     height: auto;
-    border-radius: 8px;
+    border-radius: 2px;
 }
 
 .mbsp-actions {
-    margin-top: 25px;
-    text-align: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f3f4;
     display: flex;
-    gap: 15px;
-    justify-content: center;
+    gap: 12px;
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 
 .mbsp-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
+    gap: 6px;
+    padding: 10px 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
+    background: white;
+    color: #495057;
 }
 
 .mbsp-btn-primary {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
+    background: #007bff;
     color: white;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+    border-color: #007bff;
 }
 
 .mbsp-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+    background: #0056b3;
+    border-color: #0056b3;
+    color: white;
 }
 
 .mbsp-btn-secondary {
-    background: rgba(255,255,255,0.2);
+    background: #6c757d;
     color: white;
-    border: 2px solid rgba(255,255,255,0.3);
-    backdrop-filter: blur(10px);
+    border-color: #6c757d;
 }
 
 .mbsp-btn-secondary:hover {
-    background: rgba(255,255,255,0.3);
-    border-color: rgba(255,255,255,0.5);
-    transform: translateY(-2px);
+    background: #545b62;
+    border-color: #545b62;
+    color: white;
 }
 
 .mbsp-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none !important;
+    background: #f8f9fa !important;
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
 }
 
 .mbsp-btn .spinner {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border: 2px solid transparent;
     border-top: 2px solid currentColor;
     border-radius: 50%;
@@ -476,44 +466,47 @@
 .mbsp-status-indicator {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
     font-weight: 500;
-    margin-top: 15px;
+    margin-top: 12px;
+    border: 1px solid;
 }
 
 .mbsp-status-pending {
-    background: rgba(255, 193, 7, 0.2);
+    background: #fff3cd;
     color: #856404;
-    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-color: #ffeaa7;
 }
 
 .mbsp-status-completed {
-    background: rgba(40, 167, 69, 0.2);
+    background: #d4edda;
     color: #155724;
-    border: 1px solid rgba(40, 167, 69, 0.3);
+    border-color: #c3e6cb;
 }
 
 .mbsp-status-failed {
-    background: rgba(220, 53, 69, 0.2);
+    background: #f8d7da;
     color: #721c24;
-    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-color: #f5c6cb;
 }
 
 .mbsp-copy-notification {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #4CAF50;
+    background: #28a745;
     color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    padding: 8px 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     z-index: 9999;
     transform: translateX(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .mbsp-copy-notification.show {
@@ -524,60 +517,70 @@
 @media (max-width: 768px) {
     .mbsp-payment-content {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 16px;
     }
     
     .mbsp-payment-info {
-        padding: 20px;
-        margin: 15px 0;
+        padding: 16px;
+        margin: 16px 0;
+    }
+    
+    .mbsp-payment-header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
     }
     
     .mbsp-payment-header h3 {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .mbsp-payment-item {
         flex-direction: column;
-        gap: 10px;
-        text-align: center;
+        gap: 8px;
+        align-items: flex-start;
+        padding: 10px 0;
+    }
+    
+    .mbsp-payment-item label {
+        min-width: auto;
+        font-size: 13px;
     }
     
     .mbsp-payment-item .value {
         width: 100%;
-        text-align: center;
-        font-size: 14px;
-        padding: 10px 15px;
+        text-align: left;
+        font-size: 13px;
+        padding: 8px 12px;
     }
     
     .mbsp-payment-item .amount {
-        font-size: 18px;
+        font-size: 15px;
     }
     
     .mbsp-actions {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
     
     .mbsp-btn {
         width: 100%;
         justify-content: center;
-        padding: 15px 20px;
-        font-size: 15px;
+        padding: 12px 16px;
     }
     
     .mbsp-qr-section {
-        padding: 15px;
+        padding: 12px;
     }
     
     .mbsp-qr-code img {
-        max-width: 150px;
+        max-width: 140px;
     }
     
     .mbsp-copy-notification {
         right: 10px;
         left: 10px;
         transform: translateY(-100%);
-        transition: transform 0.3s ease;
+        transition: transform 0.2s ease;
     }
     
     .mbsp-copy-notification.show {
@@ -587,47 +590,47 @@
 
 @media (max-width: 480px) {
     .mbsp-payment-info {
-        padding: 15px;
-        margin: 10px 0;
-        border-radius: 12px;
+        padding: 12px;
+        margin: 12px 0;
     }
     
     .mbsp-payment-header {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
     }
     
     .mbsp-payment-header h3 {
-        font-size: 18px;
-    }
-    
-    .mbsp-payment-header p {
-        font-size: 14px;
-    }
-    
-    .mbsp-payment-item {
-        padding: 12px 15px;
-        border-radius: 8px;
-    }
-    
-    .mbsp-payment-item label {
-        font-size: 14px;
-    }
-    
-    .mbsp-payment-item .value {
-        font-size: 13px;
-        padding: 8px 12px;
-    }
-    
-    .mbsp-qr-section {
-        padding: 12px;
-    }
-    
-    .mbsp-qr-section h4 {
         font-size: 16px;
     }
     
-    .mbsp-qr-code {
+    .mbsp-payment-header p {
+        font-size: 13px;
+    }
+    
+    .mbsp-payment-item {
+        padding: 8px 0;
+    }
+    
+    .mbsp-payment-item label {
+        font-size: 12px;
+    }
+    
+    .mbsp-payment-item .value {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .mbsp-qr-section {
         padding: 10px;
+    }
+    
+    .mbsp-qr-section h4 {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    
+    .mbsp-qr-code {
+        padding: 6px;
     }
     
     .mbsp-qr-code img {
@@ -635,12 +638,12 @@
     }
     
     .mbsp-btn {
-        padding: 12px 16px;
-        font-size: 14px;
+        padding: 10px 14px;
+        font-size: 13px;
     }
     
     .mbsp-status-indicator {
-        font-size: 13px;
-        padding: 6px 12px;
+        font-size: 12px;
+        padding: 4px 8px;
     }
 }

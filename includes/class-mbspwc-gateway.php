@@ -99,41 +99,41 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
         ?>
         <div class="mbsp-payment-info">
             <div class="mbsp-payment-header">
-                <h3><?php _e( '💳 Thông tin chuyển khoản', 'mb-smart-payment-wc' ); ?></h3>
+                <h3><?php _e( 'Thông tin chuyển khoản', 'mb-smart-payment-wc' ); ?></h3>
                 <p><?php _e( 'Vui lòng chuyển khoản theo thông tin bên dưới để hoàn tất đơn hàng', 'mb-smart-payment-wc' ); ?></p>
             </div>
 
             <div class="mbsp-payment-content">
                 <div class="mbsp-payment-details">
                     <div class="mbsp-payment-item">
-                        <label><?php _e( '🏦 Ngân hàng:', 'mb-smart-payment-wc' ); ?></label>
+                        <label><?php _e( 'Ngân hàng:', 'mb-smart-payment-wc' ); ?></label>
                         <span class="value">MB Bank (MBBank)</span>
                     </div>
                     
                     <div class="mbsp-payment-item">
-                        <label><?php _e( '💳 Số tài khoản:', 'mb-smart-payment-wc' ); ?></label>
-                        <span class="value" onclick="copyToClipboard('<?php echo esc_js( $account_no ); ?>')"><?php echo esc_html( $account_no ); ?></span>
+                        <label><?php _e( 'Số tài khoản:', 'mb-smart-payment-wc' ); ?></label>
+                        <span class="value" onclick="copyToClipboard('<?php echo esc_js( $account_no ); ?>')" title="Nhấn để sao chép"><?php echo esc_html( $account_no ); ?></span>
                     </div>
                     
                     <div class="mbsp-payment-item">
-                        <label><?php _e( '👤 Chủ tài khoản:', 'mb-smart-payment-wc' ); ?></label>
-                        <span class="value" onclick="copyToClipboard('<?php echo esc_js( $account_name ); ?>')"><?php echo esc_html( $account_name ); ?></span>
+                        <label><?php _e( 'Chủ tài khoản:', 'mb-smart-payment-wc' ); ?></label>
+                        <span class="value" onclick="copyToClipboard('<?php echo esc_js( $account_name ); ?>')" title="Nhấn để sao chép"><?php echo esc_html( $account_name ); ?></span>
                     </div>
                     
                     <div class="mbsp-payment-item">
-                        <label><?php _e( '💰 Số tiền:', 'mb-smart-payment-wc' ); ?></label>
-                        <span class="value amount" onclick="copyToClipboard('<?php echo esc_js( number_format( $order->get_total(), 0, '', '' ) ); ?>')"><?php echo wc_price( $order->get_total() ); ?></span>
+                        <label><?php _e( 'Số tiền:', 'mb-smart-payment-wc' ); ?></label>
+                        <span class="value amount" onclick="copyToClipboard('<?php echo esc_js( number_format( $order->get_total(), 0, '', '' ) ); ?>')" title="Nhấn để sao chép"><?php echo wc_price( $order->get_total() ); ?></span>
                     </div>
                     
                     <div class="mbsp-payment-item">
-                        <label><?php _e( '📝 Nội dung:', 'mb-smart-payment-wc' ); ?></label>
-                        <span class="value" onclick="copyToClipboard('ORDER-<?php echo $order->get_id(); ?>')">ORDER-<?php echo $order->get_id(); ?></span>
+                        <label><?php _e( 'Nội dung chuyển khoản:', 'mb-smart-payment-wc' ); ?></label>
+                        <span class="value" onclick="copyToClipboard('ORDER-<?php echo $order->get_id(); ?>')" title="Nhấn để sao chép">ORDER-<?php echo $order->get_id(); ?></span>
                     </div>
                 </div>
 
                 <?php if ( $qr_url ) : ?>
                 <div class="mbsp-qr-section">
-                    <h4><?php _e( '📱 Quét mã QR', 'mb-smart-payment-wc' ); ?></h4>
+                    <h4><?php _e( 'Mã QR thanh toán', 'mb-smart-payment-wc' ); ?></h4>
                     <div class="mbsp-qr-code">
                         <img src="<?php echo esc_url( $qr_url ); ?>" alt="QR Code">
                     </div>
@@ -143,24 +143,24 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
 
             <div class="mbsp-actions">
                 <button type="button" id="mbsp-check-payment" class="mbsp-btn mbsp-btn-primary" data-order-id="<?php echo $order->get_id(); ?>">
-                    <span class="text"><?php _e( '🔍 Kiểm tra thanh toán', 'mb-smart-payment-wc' ); ?></span>
+                    <span class="text"><?php _e( 'Kiểm tra thanh toán', 'mb-smart-payment-wc' ); ?></span>
                 </button>
                 
                 <a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mbsp-btn mbsp-btn-secondary">
-                    <?php _e( '📋 Xem đơn hàng', 'mb-smart-payment-wc' ); ?>
+                    <?php _e( 'Xem đơn hàng', 'mb-smart-payment-wc' ); ?>
                 </a>
             </div>
 
             <?php
             $status_class = 'mbsp-status-pending';
-            $status_text = __( '⏳ Đang chờ thanh toán', 'mb-smart-payment-wc' );
+            $status_text = __( 'Đang chờ thanh toán', 'mb-smart-payment-wc' );
             
             if ( $order_status === 'completed' || $order_status === 'processing' ) {
                 $status_class = 'mbsp-status-completed';
-                $status_text = __( '✅ Đã thanh toán', 'mb-smart-payment-wc' );
+                $status_text = __( 'Đã thanh toán', 'mb-smart-payment-wc' );
             } elseif ( $order_status === 'failed' || $order_status === 'cancelled' ) {
                 $status_class = 'mbsp-status-failed';
-                $status_text = __( '❌ Thanh toán thất bại', 'mb-smart-payment-wc' );
+                $status_text = __( 'Thanh toán thất bại', 'mb-smart-payment-wc' );
             }
             ?>
             
@@ -170,7 +170,7 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
         </div>
 
         <div class="mbsp-copy-notification" id="mbsp-copy-notification">
-            <?php _e( '✅ Đã sao chép!', 'mb-smart-payment-wc' ); ?>
+            <?php _e( 'Đã sao chép!', 'mb-smart-payment-wc' ); ?>
         </div>
         <?php
     }

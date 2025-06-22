@@ -179,21 +179,21 @@ class MBSPWC_Ajax {
         switch ( $status ) {
             case 'completed':
             case 'processing':
-                $status_text = '✅ Đã thanh toán thành công';
+                $status_text = 'Đã thanh toán thành công';
                 $status_class = 'mbsp-status-completed';
                 break;
             case 'on-hold':
             case 'pending':
-                $status_text = '⏳ Đang chờ thanh toán';
+                $status_text = 'Đang chờ thanh toán';
                 $status_class = 'mbsp-status-pending';
                 break;
             case 'failed':
             case 'cancelled':
-                $status_text = '❌ Thanh toán thất bại';
+                $status_text = 'Thanh toán thất bại';
                 $status_class = 'mbsp-status-failed';
                 break;
             default:
-                $status_text = '📋 ' . wc_get_order_status_name( $status );
+                $status_text = wc_get_order_status_name( $status );
                 $status_class = 'mbsp-status-pending';
         }
 

@@ -59,7 +59,7 @@
 
     function hideLoading($btn, originalText) {
         var $text = $btn.find('.text');
-        $text.html(originalText || '🔍 Kiểm tra thanh toán');
+        $text.html(originalText || 'Kiểm tra thanh toán');
         $btn.prop('disabled', false);
     }
 
@@ -75,7 +75,7 @@
         // If payment is completed, show success message
         if (data.is_paid) {
             setTimeout(function() {
-                if (confirm('🎉 Thanh toán đã được xác nhận!\n\nBạn có muốn tải lại trang để xem cập nhật mới nhất?')) {
+                if (confirm('Thanh toán đã được xác nhận!\n\nBạn có muốn tải lại trang để xem cập nhật mới nhất?')) {
                     location.reload();
                 }
             }, 1000);
@@ -92,7 +92,7 @@
             var originalText = $btn.find('.text').html();
             
             if (!orderId) {
-                alert('❌ Không tìm thấy ID đơn hàng');
+                alert('Không tìm thấy ID đơn hàng');
                 return;
             }
 
@@ -116,27 +116,27 @@
                     
                     if (response.data.is_paid) {
                         // Payment completed
-                        $btn.find('.text').html('✅ Đã thanh toán');
+                        $btn.find('.text').html('Đã thanh toán');
                         $btn.removeClass('mbsp-btn-primary').addClass('mbsp-btn-secondary');
                     } else {
                         // Still pending
-                        var message = '📋 Trạng thái: ' + response.data.status_text + '\n\n';
-                        message += '💰 Số tiền: ' + response.data.order_total + ' VND\n';
-                        message += '📅 Ngày đặt: ' + response.data.order_date;
+                        var message = 'Trạng thái: ' + response.data.status_text + '\n\n';
+                        message += 'Số tiền: ' + response.data.order_total + ' VND\n';
+                        message += 'Ngày đặt: ' + response.data.order_date;
                         alert(message);
                     }
                 } else {
-                    alert('❌ Lỗi: ' + (response.data || 'Không thể kiểm tra trạng thái thanh toán'));
+                    alert('Lỗi: ' + (response.data || 'Không thể kiểm tra trạng thái thanh toán'));
                 }
             })
             .fail(function(xhr, status, error) {
                 hideLoading($btn, originalText);
                 
-                var errorMsg = '❌ Lỗi kết nối';
+                var errorMsg = 'Lỗi kết nối';
                 if (xhr.responseJSON && xhr.responseJSON.data) {
-                    errorMsg = '❌ ' + xhr.responseJSON.data;
+                    errorMsg = xhr.responseJSON.data;
                 } else if (status === 'timeout') {
-                    errorMsg = '❌ Hết thời gian chờ. Vui lòng thử lại.';
+                    errorMsg = 'Hết thời gian chờ. Vui lòng thử lại.';
                 }
                 
                 alert(errorMsg);
