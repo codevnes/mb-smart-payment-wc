@@ -22,43 +22,55 @@ class MBSPWC_Admin {
         $opts = get_option( 'mbspwc_backend', [] );
         $logged_in = ! empty( $opts['token'] ) && ( $opts['expires'] ?? 0 ) > time();
 
-        if ( isset( $_POST['mbsb_login_nonce'] ) && wp_verify_nonce( $_POST['mbsb_login_nonce'], 'mbsb_login' ) ) {
-            $user = sanitize_text_field( $_POST['mb_user'] );
-            $pass = sanitize_text_field( $_POST['mb_pass'] );
-            $res  = MBSPWC_Backend::login( $user, $pass );
-            if ( is_wp_error( $res ) || empty( $res['success'] ) ) {
-                add_settings_error( 'mbsb', 'login_fail', __( 'Đăng nhập thất bại', 'mb-smart-payment-wc' ), 'error' );
-            } else {
-                $opts = [
-                    'token'         => $res['token'],
-                    'refresh_token' => $res['refreshToken'],
-                    'expires'       => time() + 3600, // giả sử 1h
-                ];
-                update_option( 'mbspwc_backend', $opts );
-                $logged_in = true;
-            }
-        } elseif ( isset( $_POST['mbsb_logout'] ) && wp_verify_nonce( $_POST['mbsb_logout'], 'mbsb_logout' ) ) {
-            if ( ! empty( $opts['token'] ) ) {
-                MBSPWC_Backend::logout( $opts['token'] );
-            }
-            delete_option( 'mbspwc_backend' );
-            $logged_in = false;
-        }
+        echo '<div class="wrap mbsp-admin-wrap">';
+        echo '<h1>' . esc_html__( 'MB Smart Payment - Trạng thái', 'mb-smart-payment-wc' ) . '</h1>';
 
-        echo '<div class="wrap"><h1>MBSB - ' . esc_html__( 'Trạng thái', 'mb-smart-payment-wc' ) . '</h1>';
+        // Status Card
+        echo '<div class="mbsp-status-card">';
+        echo '<div class="mbsp-status-indicator ' . ( $logged_in ? 'logged-in' : 'logged-out' ) . '" id="mbsp-status-indicator">';
+        echo '<span class="mbsp-status-dot"></span>';
+        echo '<span id="mbsp-status-text">' . ( $logged_in ? __( 'Đã đăng nhập MBBank', 'mb-smart-payment-wc' ) : __( 'Chưa đăng nhập MBBank', 'mb-smart-payment-wc' ) ) . '</span>';
+        echo '</div>';
 
         if ( $logged_in ) {
-            echo '<p id="mbsp-status">' . esc_html__( 'Đã đăng nhập', 'mb-smart-payment-wc' ) . '</p>';
-            echo '<a href="#" id="mbsp-logout" class="button button-secondary">' . esc_html__( 'Đăng xuất', 'mb-smart-payment-wc' ) . '</a>';
+            $expires_time = $opts['expires'] ?? 0;
+            $remaining = $expires_time - time();
+            echo '<p><strong>' . __( 'Token hết hạn:', 'mb-smart-payment-wc' ) . '</strong> ' . date( 'Y-m-d H:i:s', $expires_time ) . ' (' . sprintf( __( 'còn %d phút', 'mb-smart-payment-wc' ), max( 0, floor( $remaining / 60 ) ) ) . ')</p>';
+            
+            echo '<div class="mbsp-button-group">';
+            echo '<button type="button" id="mbsp-check-status" class="button button-secondary">' . esc_html__( 'Kiểm tra trạng thái', 'mb-smart-payment-wc' ) . '</button>';
+            echo '<button type="button" id="mbsp-logout" class="button button-secondary">' . esc_html__( 'Đăng xuất', 'mb-smart-payment-wc' ) . '</button>';
+            echo '</div>';
         } else {
-            echo '<p id="mbsp-status">' . esc_html__( 'Chưa đăng nhập', 'mb-smart-payment-wc' ) . '</p>';
+            echo '<div class="mbsp-login-form">';
             echo '<form id="mbsp-login-form">';
             wp_nonce_field( 'mbsp_admin', 'nonce' );
-            echo '<p><label>' . __( 'User', 'mb-smart-payment-wc' ) . ' <input type="text" id="mb_user" name="mb_user" class="regular-text"></label></p>';
-            echo '<p><label>' . __( 'Password', 'mb-smart-payment-wc' ) . ' <input type="password" id="mb_pass" name="mb_pass" class="regular-text"></label></p>';
-            echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Đăng nhập', 'mb-smart-payment-wc' ) . '</button></p>';
+            echo '<table class="form-table">';
+            echo '<tr><th><label for="mb_user">' . __( 'Tên đăng nhập', 'mb-smart-payment-wc' ) . '</label></th>';
+            echo '<td><input type="text" id="mb_user" name="mb_user" class="regular-text" required></td></tr>';
+            echo '<tr><th><label for="mb_pass">' . __( 'Mật khẩu', 'mb-smart-payment-wc' ) . '</label></th>';
+            echo '<td><input type="password" id="mb_pass" name="mb_pass" class="regular-text" required></td></tr>';
+            echo '</table>';
+            echo '<div class="mbsp-button-group">';
+            echo '<button type="submit" class="button button-primary">' . esc_html__( 'Đăng nhập', 'mb-smart-payment-wc' ) . '</button>';
+            echo '</div>';
             echo '</form>';
+            echo '</div>';
         }
+        echo '</div>';
+
+        // Connection Info
+        echo '<div class="mbsp-status-card">';
+        echo '<h3>' . __( 'Thông tin kết nối', 'mb-smart-payment-wc' ) . '</h3>';
+        echo '<p><strong>' . __( 'Backend API:', 'mb-smart-payment-wc' ) . '</strong> ' . MBSPWC_Backend::API_URL . '</p>';
+        
+        $settings = get_option( 'mbspwc_settings', [] );
+        $account_no = $settings['acc_no'] ?? '';
+        if ( $account_no ) {
+            echo '<p><strong>' . __( 'Số tài khoản:', 'mb-smart-payment-wc' ) . '</strong> ' . esc_html( $account_no ) . '</p>';
+        }
+        echo '</div>';
+
         echo '</div>';
     }
     public static function assets( $hook ) {

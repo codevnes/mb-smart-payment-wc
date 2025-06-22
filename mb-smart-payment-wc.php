@@ -40,7 +40,6 @@ add_action( 'plugins_loaded', function () {
     }
 
     // Tự động nạp file class
-    require_once MBSPWC_PATH . 'includes/class-mbspwc-api.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-gateway.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-cron.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-backend.php';

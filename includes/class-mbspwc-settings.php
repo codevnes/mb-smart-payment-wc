@@ -46,11 +46,17 @@ class MBSPWC_Settings {
     }
 
     public static function render() {
-        echo '<div class="wrap"><h1>' . esc_html__( 'MB Smart Payment Settings', 'mb-smart-payment-wc' ) . '</h1>';
+        echo '<div class="wrap mbsp-admin-wrap">';
+        echo '<h1>' . esc_html__( 'MB Smart Payment - Cài đặt', 'mb-smart-payment-wc' ) . '</h1>';
+        
+        echo '<div class="mbsp-settings">';
         echo '<form method="post" action="options.php">';
         settings_fields( 'mbspwc_group' );
         do_settings_sections( 'mbspwc_group' );
-        submit_button();
-        echo '</form></div>';
+        submit_button( __( 'Lưu cài đặt', 'mb-smart-payment-wc' ), 'primary', 'submit', true, [ 'class' => 'button-primary' ] );
+        echo '</form>';
+        echo '</div>';
+        
+        echo '</div>';
     }
 }

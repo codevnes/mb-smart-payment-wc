@@ -1,3 +1,278 @@
-#mbsp-status{font-weight:bold}
-#mbsp-trans-table{margin-top:1em}
-.mbsp-trans .mbsp-filters{margin:1em 0}.mbsp-trans table.widefat th{text-align:left}
+/* MBSP Admin Styles */
+.mbsp-admin-wrap {
+    max-width: 1200px;
+    margin: 20px 0;
+}
+
+.mbsp-admin-wrap h1 {
+    color: #23282d;
+    margin-bottom: 20px;
+}
+
+/* Status Page */
+.mbsp-status-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.mbsp-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.mbsp-status-indicator.logged-in {
+    color: #00a32a;
+}
+
+.mbsp-status-indicator.logged-out {
+    color: #d63638;
+}
+
+.mbsp-status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* Login Form */
+.mbsp-login-form {
+    max-width: 400px;
+}
+
+.mbsp-login-form .form-table {
+    margin-top: 0;
+}
+
+.mbsp-login-form .form-table th {
+    padding-left: 0;
+    width: 120px;
+}
+
+.mbsp-login-form .regular-text {
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Buttons */
+.mbsp-button-group {
+    margin-top: 15px;
+}
+
+.mbsp-button-group .button {
+    margin-right: 10px;
+}
+
+/* Transactions Page */
+.mbsp-trans {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.mbsp-filters {
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mbsp-filters input,
+.mbsp-filters select {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.mbsp-filters input[type="date"] {
+    width: 150px;
+}
+
+.mbsp-filters input[type="text"] {
+    width: 120px;
+}
+
+.mbsp-filters .button {
+    height: 32px;
+    line-height: 30px;
+}
+
+/* Tables */
+.mbsp-trans table.widefat {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+.mbsp-trans table.widefat th {
+    text-align: left;
+    background: #f9f9f9;
+    font-weight: 600;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.mbsp-trans table.widefat td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.mbsp-trans table.widefat tr:hover {
+    background: #f9f9f9;
+}
+
+.mbsp-trans table.widefat .amount {
+    font-weight: 600;
+    color: #00a32a;
+}
+
+.mbsp-trans table.widefat .status {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.mbsp-trans table.widefat .status.matched {
+    background: #d4edda;
+    color: #155724;
+}
+
+.mbsp-trans table.widefat .status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Settings Page */
+.mbsp-settings {
+    max-width: 800px;
+}
+
+.mbsp-settings .form-table th {
+    width: 200px;
+    padding-left: 0;
+}
+
+.mbsp-settings .form-table td {
+    padding-left: 20px;
+}
+
+.mbsp-settings .regular-text {
+    width: 100%;
+    max-width: 400px;
+}
+
+.mbsp-settings .description {
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+/* Loading States */
+.mbsp-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.mbsp-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: mbsp-spin 1s linear infinite;
+}
+
+@keyframes mbsp-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mbsp-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .mbsp-filters input,
+    .mbsp-filters .button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .mbsp-trans table.widefat {
+        font-size: 14px;
+    }
+    
+    .mbsp-trans table.widefat th,
+    .mbsp-trans table.widefat td {
+        padding: 8px;
+    }
+}
+
+/* Payment Info on Thank You Page */
+.mbspwc-payment-info {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.mbspwc-payment-info h2 {
+    color: #495057;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.mbspwc-payment-details p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.mbspwc-payment-details strong {
+    color: #212529;
+    min-width: 120px;
+    display: inline-block;
+}
+
+.mbspwc-qr-code {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.mbspwc-qr-code h3 {
+    color: #495057;
+    margin-bottom: 15px;
+}
+
+.mbspwc-qr-code img {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+}
