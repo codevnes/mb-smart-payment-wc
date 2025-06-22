@@ -11,26 +11,11 @@ class MBSPWC_Transactions_Admin {
     // Việc thêm submenu được thực hiện trong MBSPWC_Admin
 
     public static function render() {
-        echo '<div class="wrap"><h1>' . esc_html__( 'Lịch sử giao dịch MBBank', 'mb-smart-payment-wc' ) . '</h1>';
+        echo '<div class="wrap mbsp-trans"><h1>' . esc_html__( 'Lịch sử giao dịch MBBank', 'mb-smart-payment-wc' ) . '</h1>';
 
-        // Hiển thị giao dịch vừa lấy trực tiếp từ API
-        $opts   = get_option( 'mbspwc_settings', [] );
-        $token  = $opts['token'] ?? '';
-        $expires= $opts['expires'] ?? 0;
-        if ( empty( $token ) || $expires < time() ) {
-            $creds  = $opts['creds'] ?? $opts; // Thống nhất key
-            $login  = MBSPWC_API::login( $creds['user'] ?? '', $creds['pass'] ?? '' );
-            if ( $login ) {
-                $token = $login['token'];
-                $opts['token']   = $token;
-                $opts['expires'] = $login['expires_at'];
-                update_option( 'mbspwc_settings', $opts );
-            }
-        }
-        $transactions = MBSPWC_API::get_transactions( $token );
+        echo '<div class="mbsp-filters"><input type="date" id="mbsp-from"> <input type="date" id="mbsp-to"> <input type="text" id="mbsp-acc" placeholder="' . esc_attr__( 'Số TK', 'mb-smart-payment-wc' ) . '" size="12"> <button class="button" id="mbsp-load-trans">' . esc_html__( 'Tải giao dịch', 'mb-smart-payment-wc' ) . '</button></div>';
 
-        echo '<h2>' . esc_html__( 'Giao dịch mới nhất (API)', 'mb-smart-payment-wc' ) . '</h2>';
-        self::table_api( $transactions );
+        echo '<table class="widefat" id="mbsp-trans-table"><thead><tr><th>' . __( 'Mã GD', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Số tiền', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Mô tả', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Thời gian', 'mb-smart-payment-wc' ) . '</th></tr></thead><tbody><tr><td colspan="4">' . __( 'Chưa có dữ liệu', 'mb-smart-payment-wc' ) . '</td></tr></tbody></table>';
 
         // Hiển thị lịch sử đã match
         global $wpdb;
