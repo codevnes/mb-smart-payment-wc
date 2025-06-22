@@ -6,20 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class MBSPWC_Transactions_Admin {
 
-    public static function init() {
-        add_action( 'admin_menu', [ __CLASS__, 'menu' ] );
-    }
+    public static function init() {}
 
-    public static function menu() {
-        add_submenu_page(
-            'woocommerce',
-            __( 'Giao dịch MBBank', 'mb-smart-payment-wc' ),
-            __( 'MBBank Transactions', 'mb-smart-payment-wc' ),
-            'manage_woocommerce',
-            'mbspwc-transactions',
-            [ __CLASS__, 'render' ]
-        );
-    }
+    // Việc thêm submenu được thực hiện trong MBSPWC_Admin
 
     public static function render() {
         echo '<div class="wrap"><h1>' . esc_html__( 'Lịch sử giao dịch MBBank', 'mb-smart-payment-wc' ) . '</h1>';

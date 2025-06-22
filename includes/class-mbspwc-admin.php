@@ -1,6 +1,6 @@
 <?php
 /**
- * Top-level Admin menu 'MBSB'
+ * Top-level Admin menu 'MBSP'
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -10,10 +10,10 @@ class MBSPWC_Admin {
     }
 
     public static function menu() {
-        add_menu_page( 'MBSB', 'MBSB', 'manage_options', 'mbsb', [ __CLASS__, 'status_page' ], 'dashicons-bank', 56 );
+        add_menu_page( 'MBSP', 'MBSP', 'manage_options', 'mbsp', [ __CLASS__, 'status_page' ], 'dashicons-bank', 56 );
 
-        add_submenu_page( 'mbsb', __( 'Trạng thái', 'mb-smart-payment-wc' ), __( 'Trạng thái', 'mb-smart-payment-wc' ), 'manage_options', 'mbsb', [ __CLASS__, 'status_page' ] );
-        add_submenu_page( 'mbsb', __( 'Giao dịch', 'mb-smart-payment-wc' ), __( 'Giao dịch', 'mb-smart-payment-wc' ), 'manage_woocommerce', 'mbsb-transactions', [ 'MBSPWC_Transactions_Admin', 'render' ] );
+        add_submenu_page( 'mbsp', __( 'Trạng thái', 'mb-smart-payment-wc' ), __( 'Trạng thái', 'mb-smart-payment-wc' ), 'manage_options', 'mbsp', [ __CLASS__, 'status_page' ] );
+        add_submenu_page( 'mbsp', __( 'Giao dịch', 'mb-smart-payment-wc' ), __( 'Giao dịch', 'mb-smart-payment-wc' ), 'manage_woocommerce', 'mbsb-transactions', [ 'MBSPWC_Transactions_Admin', 'render' ] );
         add_submenu_page( 'mbsb', __( 'Cài đặt', 'mb-smart-payment-wc' ), __( 'Cài đặt', 'mb-smart-payment-wc' ), 'manage_options', 'mbspwc-settings', [ 'MBSPWC_Settings', 'render' ] );
     }
 

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class MBSPWC_Settings {
     public static function init() {
-        add_action( 'admin_menu', [ __CLASS__, 'menu' ] );
+        // add_action( 'admin_menu', [ __CLASS__, 'menu' ] );
         add_action( 'admin_init', [ __CLASS__, 'register' ] );
     }
 
