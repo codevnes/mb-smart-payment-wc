@@ -1,12 +1,12 @@
 # MB Smart Payment WC
 
-Plugin WooCommerce tích hợp thanh toán tự động qua API ngân hàng MB (MBBank) với giao diện quản trị hiện đại.
+Plugin WooCommerce tích hợp thanh toán tự động qua API ngân hàng MB (MBBank) với **giao diện admin hiện đại sử dụng Vue.js và Element Plus**.
 
 ## Tính năng chính
 
 - ✅ **Thanh toán tự động**: Tự động xác nhận thanh toán qua API MBBank
 - ✅ **QR Code**: Tạo mã QR VietQR cho khách hàng
-- ✅ **Giao diện admin hiện đại**: Dashboard quản lý với style đẹp
+- ✅ **Giao diện admin hiện đại**: Vue.js 3 + Element Plus UI components
 - ✅ **Kiểm tra trạng thái**: Theo dõi kết nối MBBank real-time
 - ✅ **Lịch sử giao dịch**: Xem và quản lý giao dịch đã khớp
 - ✅ **Tự động refresh token**: Duy trì kết nối liên tục
@@ -17,8 +17,10 @@ Plugin WooCommerce tích hợp thanh toán tự động qua API ngân hàng MB (
 ```
 mb-smart-payment-wc/
 ├── assets/                          # Tài nguyên frontend
-│   ├── admin.css                    # Style cho admin (đã tối ưu)
-│   ├── admin.js                     # JavaScript cho admin (đã cải tiến)
+│   ├── vue-modern.js                # Vue.js 3 components với Element Plus
+│   ├── element-theme.css            # Custom Element Plus theme
+│   ├── admin.css                    # Legacy admin styles
+│   ├── admin.js                     # Legacy admin scripts
 │   └── mbbank.svg                   # Icon MBBank
 ├── includes/                        # Code chính
 │   ├── class-mbspwc-admin.php       # Giao diện admin chính
@@ -36,12 +38,14 @@ mb-smart-payment-wc/
 
 ## Cải tiến mới
 
-### 🎨 Giao diện Admin
-- Dashboard hiện đại với card layout
-- Status indicator với màu sắc trực quan
-- Form đăng nhập được thiết kế lại
-- Responsive design cho mobile
-- Loading states và animations
+### 🎨 Giao diện Admin (Vue.js + Element Plus)
+- **Vue.js 3** với Composition API và reactive data
+- **Element Plus** UI components chuyên nghiệp
+- Dashboard hiện đại với animated statistics
+- Professional form components với validation
+- Toast notifications và modal dialogs
+- Responsive design và dark mode support
+- Smooth animations và transitions
 
 ### 🔧 Tính năng mới
 - **Kiểm tra trạng thái**: Button kiểm tra kết nối MBBank
