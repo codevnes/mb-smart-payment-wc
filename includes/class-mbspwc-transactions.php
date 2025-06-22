@@ -11,7 +11,8 @@ class MBSPWC_Transactions_Admin {
     // Việc thêm submenu được thực hiện trong MBSPWC_Admin
 
     public static function render() {
-        $use_vue = get_option( 'mbspwc_use_vue', true );
+        $settings = get_option( 'mbspwc_settings', [] );
+        $use_vue = isset( $settings['use_vue'] ) && $settings['use_vue'];
         
         if ( $use_vue ) {
             echo '<div id="mbsp-vue-admin"></div>';

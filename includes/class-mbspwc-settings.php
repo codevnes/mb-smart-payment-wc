@@ -33,6 +33,10 @@ class MBSPWC_Settings {
         // Account info
         add_settings_field( 'acc_no', __( 'Số tài khoản', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'acc_no' ] );
         add_settings_field( 'acc_name', __( 'Chủ tài khoản', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'acc_name' ] );
+        
+        // UI Settings
+        add_settings_section( 'mbspwc_ui', __( 'Giao diện', 'mb-smart-payment-wc' ), null, 'mbspwc_group' );
+        add_settings_field( 'use_vue', __( 'Sử dụng giao diện hiện đại', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_checkbox' ], 'mbspwc_group', 'mbspwc_ui', [ 'id' => 'use_vue' ] );
     }
 
     public static function field_text( $args ) {
@@ -44,9 +48,21 @@ class MBSPWC_Settings {
         $opts = get_option( 'mbspwc_settings', [] );
         printf( '<input type="password" name="mbspwc_settings[%s]" value="%s" class="regular-text"/>', esc_attr( $args['id'] ), esc_attr( $opts[ $args['id'] ] ?? '' ) );
     }
+    
+    public static function field_checkbox( $args ) {
+        $opts = get_option( 'mbspwc_settings', [] );
+        $checked = isset( $opts[ $args['id'] ] ) && $opts[ $args['id'] ] ? 'checked' : '';
+        printf( '<input type="checkbox" name="mbspwc_settings[%s]" value="1" %s/> <label for="mbspwc_settings[%s]">%s</label>', 
+            esc_attr( $args['id'] ), 
+            $checked, 
+            esc_attr( $args['id'] ),
+            __( 'Sử dụng Vue.js và Element Plus cho giao diện admin hiện đại', 'mb-smart-payment-wc' )
+        );
+    }
 
     public static function render() {
-        $use_vue = get_option( 'mbspwc_use_vue', true );
+        $settings = get_option( 'mbspwc_settings', [] );
+        $use_vue = isset( $settings['use_vue'] ) && $settings['use_vue'];
         
         if ( $use_vue ) {
             echo '<div id="mbsp-vue-admin"></div>';

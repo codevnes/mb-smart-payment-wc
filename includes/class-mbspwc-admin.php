@@ -19,7 +19,8 @@ class MBSPWC_Admin {
     }
 
     public static function status_page() {
-        $use_vue = get_option( 'mbspwc_use_vue', true );
+        $settings = get_option( 'mbspwc_settings', [] );
+        $use_vue = isset( $settings['use_vue'] ) && $settings['use_vue'];
         
         if ( $use_vue ) {
             echo '<div id="mbsp-vue-admin"></div>';
@@ -122,18 +123,20 @@ class MBSPWC_Admin {
         if ( strpos( $hook, 'mbsp' ) === false ) return;
         
         // Check if Vue mode is enabled
-        $use_vue = get_option( 'mbspwc_use_vue', true );
+        $settings = get_option( 'mbspwc_settings', [] );
+        $use_vue = isset( $settings['use_vue'] ) && $settings['use_vue'];
         
         if ( $use_vue ) {
-            // Load Vue.js from CDN
+            // Load Vue.js and Element Plus from CDN
             wp_enqueue_script( 'vue-js', 'https://unpkg.com/vue@3/dist/vue.global.js', [], '3.3.4', false );
+            wp_enqueue_script( 'element-plus', 'https://unpkg.com/element-plus/dist/index.full.js', [ 'vue-js' ], '2.4.4', false );
+            wp_enqueue_style( 'element-plus-css', 'https://unpkg.com/element-plus/dist/index.css', [], '2.4.4' );
             
-            // Load Vue components and styles
-            wp_enqueue_script( 'mbsp-vue-components', MBSPWC_URL . 'assets/vue-components.js', [ 'vue-js' ], MBSPWC_VERSION, true );
-            wp_enqueue_style( 'mbsp-vue-admin', MBSPWC_URL . 'assets/vue-admin.css', [], MBSPWC_VERSION );
-            wp_enqueue_style( 'mbsp-admin', MBSPWC_URL . 'assets/admin.css', [], MBSPWC_VERSION );
+            // Load custom components and styles
+            wp_enqueue_script( 'mbsp-vue-modern', MBSPWC_URL . 'assets/vue-modern.js', [ 'vue-js', 'element-plus' ], MBSPWC_VERSION, true );
+            wp_enqueue_style( 'mbsp-element-theme', MBSPWC_URL . 'assets/element-theme.css', [ 'element-plus-css' ], MBSPWC_VERSION );
             
-            wp_localize_script( 'mbsp-vue-components', 'mbsp_admin', [
+            wp_localize_script( 'mbsp-vue-modern', 'mbsp_admin', [
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'nonce' => wp_create_nonce( 'mbsp_admin' ),
                 'api_url' => MBSPWC_Backend::API_URL,

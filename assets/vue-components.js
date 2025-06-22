@@ -400,7 +400,7 @@ const StatusPage = {
                             <div class="mbsp-form-group">
                                 <label class="mbsp-form-label">Backend API</label>
                                 <div style="font-family: monospace; font-size: 14px; color: #374151; word-break: break-all;">
-                                    {{ mbsp_admin.api_url || 'https://api.mbbank.com.vn' }}
+                                    {{ (typeof mbsp_admin !== 'undefined' && mbsp_admin.api_url) || 'https://api.mbbank.com.vn' }}
                                 </div>
                             </div>
                             <button 
