@@ -44,12 +44,14 @@ add_action( 'plugins_loaded', function () {
     require_once MBSPWC_PATH . 'includes/class-mbspwc-cron.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-backend.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-admin.php';
+    require_once MBSPWC_PATH . 'includes/class-mbspwc-ajax.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-settings.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-vietqr.php';
     require_once MBSPWC_PATH . 'includes/class-mbspwc-transactions.php';
 
     MBSPWC_Admin::init();
     // Đăng ký gateway với WooCommerce
+    MBSPWC_Ajax::init();
     add_filter( 'woocommerce_payment_gateways', function ( $methods ) {
         $methods[] = 'WC_Gateway_MBSPWC';
         return $methods;

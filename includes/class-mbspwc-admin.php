@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class MBSPWC_Admin {
     public static function init() {
         add_action( 'admin_menu', [ __CLASS__, 'menu' ] );
+        add_action( 'admin_enqueue_scripts', [ __CLASS__, 'assets' ] );
     }
 
     public static function menu() {
@@ -63,4 +64,18 @@ class MBSPWC_Admin {
         }
         echo '</div>';
     }
+    public static function assets( $hook ) {
+        if ( strpos( $hook, 'mbsp' ) === false ) return;
+        wp_enqueue_script( 'mbsp-admin', MBSPWC_URL . 'assets/admin.js', [ 'jquery' ], MBSPWC_VERSION, true );
+        wp_localize_script( 'mbsp-admin', 'mbsp_admin', [
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( 'mbsp_admin' ),
+            'i18n'     => [
+                'logged'     => __( 'Đã đăng nhập', 'mb-smart-payment-wc' ),
+                'not_logged' => __( 'Chưa đăng nhập', 'mb-smart-payment-wc' ),
+            ],
+        ] );
+        wp_enqueue_style( 'mbsp-admin', MBSPWC_URL . 'assets/admin.css', [], MBSPWC_VERSION );
+    }
+
 }
