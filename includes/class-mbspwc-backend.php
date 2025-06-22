@@ -14,19 +14,49 @@ class MBSPWC_Backend {
         if ( ! empty( $args['token'] ) ) {
             $headers['Authorization'] = 'Bearer ' . $args['token'];
         }
+        
         $response = wp_remote_request( $url, [
             'method'  => $method,
             'headers' => $headers,
             'body'    => $body,
             'timeout' => 15,
         ] );
-        if ( is_wp_error( $response ) ) return $response;
-        $code = wp_remote_retrieve_response_code( $response );
-        $data = json_decode( wp_remote_retrieve_body( $response ), true );
-        if ( $code >= 200 && $code < 300 && ! empty( $data ) ) {
-            return $data;
+        
+        if ( is_wp_error( $response ) ) {
+            return $response;
         }
-        return new WP_Error( 'mbsb_api_error', __( 'Lỗi gọi API', 'mb-smart-payment-wc' ), $data );
+        
+        $code = wp_remote_retrieve_response_code( $response );
+        $body_content = wp_remote_retrieve_body( $response );
+        $data = json_decode( $body_content, true );
+        
+        // Log for debugging
+        error_log( "MBSPWC API Request: {$method} {$url}" );
+        error_log( "MBSPWC API Response Code: {$code}" );
+        error_log( "MBSPWC API Response Body: {$body_content}" );
+        
+        // Handle successful responses
+        if ( $code >= 200 && $code < 300 ) {
+            return $data ?: [];
+        }
+        
+        // Handle error responses
+        $error_message = __( 'Lỗi kết nối API', 'mb-smart-payment-wc' );
+        
+        if ( $data ) {
+            if ( isset( $data['message'] ) ) {
+                $error_message = $data['message'];
+            } elseif ( isset( $data['error'] ) ) {
+                $error_message = $data['error'];
+            } elseif ( isset( $data['msg'] ) ) {
+                $error_message = $data['msg'];
+            }
+        }
+        
+        return new WP_Error( 'mbsb_api_error', $error_message, [
+            'status_code' => $code,
+            'response_data' => $data
+        ] );
     }
 
     public static function login( $user, $pass ) {

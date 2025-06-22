@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class MBSPWC_Ajax {
     public static function init() {
-        $actions = [ 'login', 'status', 'logout', 'transactions' ];
+        $actions = [ 'login', 'status', 'logout', 'transactions', 'test_connection' ];
         foreach ( $actions as $act ) {
             add_action( 'wp_ajax_mbsp_' . $act, [ __CLASS__, $act ] );
         }
@@ -21,24 +21,52 @@ class MBSPWC_Ajax {
     public static function login() {
         check_ajax_referer( 'mbsp_admin', 'nonce' );
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'Permission denied', 'mb-smart-payment-wc' ), 403 );
+            wp_send_json_error( __( 'Không có quyền truy cập', 'mb-smart-payment-wc' ), 403 );
         }
+        
         $user = sanitize_text_field( $_POST['user'] ?? '' );
         $pass = sanitize_text_field( $_POST['pass'] ?? '' );
+        
         if ( ! $user || ! $pass ) {
-            wp_send_json_error( __( 'Missing credentials', 'mb-smart-payment-wc' ) );
+            wp_send_json_error( __( 'Vui lòng nhập đầy đủ thông tin đăng nhập', 'mb-smart-payment-wc' ) );
         }
+        
         $res = MBSPWC_Backend::login( $user, $pass );
-        if ( is_wp_error( $res ) || empty( $res['token'] ) ) {
-            wp_send_json_error( $res instanceof WP_Error ? $res->get_error_message() : __( 'Login failed', 'mb-smart-payment-wc' ) );
+        
+        // Debug log
+        error_log( 'MBSPWC Login Response: ' . print_r( $res, true ) );
+        
+        if ( is_wp_error( $res ) ) {
+            wp_send_json_error( $res->get_error_message() );
         }
+        
+        // Check if response has success field
+        if ( isset( $res['success'] ) && $res['success'] === false ) {
+            $error_msg = $res['message'] ?? $res['error'] ?? __( 'Đăng nhập thất bại', 'mb-smart-payment-wc' );
+            wp_send_json_error( $error_msg );
+        }
+        
+        // Check for token
+        if ( empty( $res['token'] ) && empty( $res['accessToken'] ) ) {
+            $error_msg = $res['message'] ?? $res['error'] ?? __( 'Không nhận được token từ server', 'mb-smart-payment-wc' );
+            wp_send_json_error( $error_msg );
+        }
+        
+        $token = $res['token'] ?? $res['accessToken'] ?? '';
+        $refresh_token = $res['refreshToken'] ?? $res['refresh_token'] ?? '';
+        
         $opts = [
-            'token'         => $res['token'],
-            'refresh_token' => $res['refreshToken'] ?? '',
+            'token'         => $token,
+            'refresh_token' => $refresh_token,
             'expires'       => time() + 3600,
         ];
+        
         update_option( 'mbspwc_backend', $opts );
-        self::json( [ 'success' => true ] );
+        
+        wp_send_json_success( [
+            'message' => __( 'Đăng nhập thành công', 'mb-smart-payment-wc' ),
+            'token_expires' => $opts['expires']
+        ] );
     }
 
     public static function logout() {
@@ -83,5 +111,35 @@ class MBSPWC_Ajax {
             wp_send_json_error( $data->get_error_message() );
         }
         self::json( [ 'items' => $data ] );
+    }
+
+    public static function test_connection() {
+        check_ajax_referer( 'mbsp_admin', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Không có quyền truy cập', 403 );
+        }
+
+        // Test basic connection to backend
+        $response = wp_remote_get( MBSPWC_Backend::API_URL . '/api/health', [
+            'timeout' => 10,
+            'headers' => [ 'Content-Type' => 'application/json' ]
+        ] );
+
+        if ( is_wp_error( $response ) ) {
+            wp_send_json_error( 'Không thể kết nối đến backend: ' . $response->get_error_message() );
+        }
+
+        $code = wp_remote_retrieve_response_code( $response );
+        $body = wp_remote_retrieve_body( $response );
+
+        if ( $code === 200 ) {
+            wp_send_json_success( [
+                'message' => 'Kết nối backend thành công',
+                'backend_url' => MBSPWC_Backend::API_URL,
+                'response' => $body
+            ] );
+        } else {
+            wp_send_json_error( "Backend trả về lỗi: HTTP {$code}" );
+        }
     }
 }

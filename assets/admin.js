@@ -39,13 +39,42 @@
             }
             
             showLoading($btn);
+            
             req('login', { user: user, pass: pass })
-                .done(function () { 
-                    location.reload(); 
-                })
-                .fail(function (r) { 
+                .done(function (response) {
                     hideLoading($btn);
-                    alert(r.responseJSON?.data || 'Đăng nhập thất bại'); 
+                    
+                    // Check if response indicates success
+                    if (response.success === true) {
+                        alert('Đăng nhập thành công!');
+                        location.reload();
+                    } else {
+                        // Handle case where success is false
+                        var errorMsg = response.data || response.message || 'Đăng nhập thất bại';
+                        alert('Lỗi: ' + errorMsg);
+                    }
+                })
+                .fail(function (xhr) {
+                    hideLoading($btn);
+                    
+                    var errorMsg = 'Đăng nhập thất bại';
+                    
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.data) {
+                            errorMsg = xhr.responseJSON.data;
+                        } else if (xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                    } else if (xhr.responseText) {
+                        try {
+                            var parsed = JSON.parse(xhr.responseText);
+                            errorMsg = parsed.message || parsed.error || errorMsg;
+                        } catch (e) {
+                            errorMsg = 'Lỗi kết nối đến server';
+                        }
+                    }
+                    
+                    alert('Lỗi: ' + errorMsg);
                 });
         });
 
@@ -127,6 +156,25 @@
                     hideLoading($btn);
                     $('#mbsp-trans-table tbody').html('<tr><td colspan="4" style="text-align:center;padding:20px;color:#d63638;">Lỗi: ' + (r.responseJSON?.data || 'Không thể tải dữ liệu') + '</td></tr>');
                 });
+        });
+
+        // Test connection button
+        $('#mbsp-test-connection').on('click', function (e) {
+            e.preventDefault();
+            var $btn = $(this);
+            showLoading($btn);
+            
+            req('test_connection').done(function (res) {
+                hideLoading($btn);
+                if (res.success) {
+                    alert('✅ ' + res.data.message + '\n\nBackend URL: ' + res.data.backend_url);
+                } else {
+                    alert('❌ Lỗi kết nối: ' + (res.data || 'Không xác định'));
+                }
+            }).fail(function (r) {
+                hideLoading($btn);
+                alert('❌ Lỗi kết nối backend: ' + (r.responseJSON?.data || 'Không thể kết nối'));
+            });
         });
 
         // Set default dates (last 7 days)

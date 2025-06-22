@@ -69,6 +69,10 @@ class MBSPWC_Admin {
         if ( $account_no ) {
             echo '<p><strong>' . __( 'Số tài khoản:', 'mb-smart-payment-wc' ) . '</strong> ' . esc_html( $account_no ) . '</p>';
         }
+        
+        echo '<div class="mbsp-button-group">';
+        echo '<button type="button" id="mbsp-test-connection" class="button button-secondary">' . esc_html__( 'Kiểm tra kết nối Backend', 'mb-smart-payment-wc' ) . '</button>';
+        echo '</div>';
         echo '</div>';
 
         echo '</div>';
