@@ -33,6 +33,8 @@ class MBSPWC_Settings {
         // Account info
         add_settings_field( 'acc_no', __( 'Số tài khoản', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'acc_no' ] );
         add_settings_field( 'acc_name', __( 'Chủ tài khoản', 'mb-smart-payment-wc' ), [ __CLASS__, 'field_text' ], 'mbspwc_group', 'mbspwc_api', [ 'id' => 'acc_name' ] );
+        
+
     }
 
     public static function field_text( $args ) {
@@ -44,13 +46,11 @@ class MBSPWC_Settings {
         $opts = get_option( 'mbspwc_settings', [] );
         printf( '<input type="password" name="mbspwc_settings[%s]" value="%s" class="regular-text"/>', esc_attr( $args['id'] ), esc_attr( $opts[ $args['id'] ] ?? '' ) );
     }
+    
+
 
     public static function render() {
-        echo '<div class="wrap"><h1>' . esc_html__( 'MB Smart Payment Settings', 'mb-smart-payment-wc' ) . '</h1>';
-        echo '<form method="post" action="options.php">';
-        settings_fields( 'mbspwc_group' );
-        do_settings_sections( 'mbspwc_group' );
-        submit_button();
-        echo '</form></div>';
+        // Always use Vue.js interface
+        echo '<div id="mbsp-vue-admin"></div>';
     }
 }

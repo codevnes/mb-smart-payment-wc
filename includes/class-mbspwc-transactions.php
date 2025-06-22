@@ -11,21 +11,8 @@ class MBSPWC_Transactions_Admin {
     // Việc thêm submenu được thực hiện trong MBSPWC_Admin
 
     public static function render() {
-        echo '<div class="wrap mbsp-trans"><h1>' . esc_html__( 'Lịch sử giao dịch MBBank', 'mb-smart-payment-wc' ) . '</h1>';
-
-        echo '<div class="mbsp-filters"><input type="date" id="mbsp-from"> <input type="date" id="mbsp-to"> <input type="text" id="mbsp-acc" placeholder="' . esc_attr__( 'Số TK', 'mb-smart-payment-wc' ) . '" size="12"> <button class="button" id="mbsp-load-trans">' . esc_html__( 'Tải giao dịch', 'mb-smart-payment-wc' ) . '</button></div>';
-
-        echo '<table class="widefat" id="mbsp-trans-table"><thead><tr><th>' . __( 'Mã GD', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Số tiền', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Mô tả', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Thời gian', 'mb-smart-payment-wc' ) . '</th></tr></thead><tbody><tr><td colspan="4">' . __( 'Chưa có dữ liệu', 'mb-smart-payment-wc' ) . '</td></tr></tbody></table>';
-
-        // Hiển thị lịch sử đã match
-        global $wpdb;
-        $table_name = $wpdb->prefix . MBSPWC_DB::TABLE;
-        $logs = $wpdb->get_results( "SELECT * FROM {$table_name} ORDER BY created DESC LIMIT 100", ARRAY_A );
-
-        echo '<h2>' . esc_html__( 'Giao dịch đã khớp đơn', 'mb-smart-payment-wc' ) . '</h2>';
-        self::table_db( $logs );
-
-        echo '</div>';
+        // Always use Vue.js interface
+        echo '<div id="mbsp-vue-admin"></div>';
     }
 
     protected static function table_api( $rows ) {
@@ -41,19 +28,85 @@ class MBSPWC_Transactions_Admin {
         echo '</tbody></table>';
     }
 
+    protected static function table_orders( $orders ) {
+        echo '<table class="mbsp-table"><thead><tr>';
+        echo '<th>ID</th>';
+        echo '<th>' . __( 'Đơn hàng', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Khách hàng', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Số tiền', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Trạng thái', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Mã GD', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Thời gian tạo', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Cập nhật', 'mb-smart-payment-wc' ) . '</th>';
+        echo '</tr></thead><tbody>';
+        
+        if ( empty( $orders ) ) {
+            echo '<tr><td colspan="8" style="text-align: center; padding: 40px;">';
+            echo '<div class="mbsp-empty-state">';
+            echo '<div class="icon">🛒</div>';
+            echo '<h3>' . __( 'Chưa có đơn hàng nào', 'mb-smart-payment-wc' ) . '</h3>';
+            echo '<p>' . __( 'Các đơn hàng sử dụng MB Smart Payment sẽ hiển thị ở đây', 'mb-smart-payment-wc' ) . '</p>';
+            echo '</div>';
+            echo '</td></tr>';
+        } else {
+            foreach ( $orders as $order ) {
+                $status_class = '';
+                $status_text = '';
+                
+                switch ( $order->status ) {
+                    case 'pending':
+                        $status_class = 'pending';
+                        $status_text = 'Chờ thanh toán';
+                        break;
+                    case 'completed':
+                        $status_class = 'completed';
+                        $status_text = 'Đã thanh toán';
+                        break;
+                    case 'failed':
+                        $status_class = 'failed';
+                        $status_text = 'Thất bại';
+                        break;
+                    default:
+                        $status_class = 'pending';
+                        $status_text = ucfirst( $order->status );
+                }
+                
+                printf( '<tr><td>%d</td><td><a href="%s" style="color: #667eea; text-decoration: none; font-weight: 600;">#%d</a></td><td>%s</td><td class="amount">%s</td><td><span class="status %s">%s</span></td><td style="font-family: monospace; font-size: 13px;">%s</td><td style="font-size: 13px;">%s</td><td style="font-size: 13px;">%s</td></tr>',
+                    $order->id,
+                    esc_url( admin_url( 'post.php?post=' . $order->order_id . '&action=edit' ) ),
+                    $order->order_id,
+                    esc_html( $order->customer_name ?: $order->customer_email ),
+                    wc_price( $order->amount ),
+                    esc_attr( $status_class ),
+                    esc_html( $status_text ),
+                    esc_html( $order->trans_id ?: '-' ),
+                    esc_html( date( 'Y-m-d H:i', strtotime( $order->created ) ) ),
+                    esc_html( date( 'Y-m-d H:i', strtotime( $order->updated ) ) )
+                );
+            }
+        }
+        echo '</tbody></table>';
+    }
+
     protected static function table_db( $rows ) {
         echo '<table class="widefat"><thead><tr>';
         echo '<th>ID</th><th>' . __( 'Đơn hàng', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Mã GD', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Số tiền', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Trạng thái', 'mb-smart-payment-wc' ) . '</th><th>' . __( 'Thời gian', 'mb-smart-payment-wc' ) . '</th></tr></thead><tbody>';
-        foreach ( $rows as $r ) {
-            printf( '<tr><td>%d</td><td><a href="%s">#%d</a></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-                $r['id'],
-                esc_url( admin_url( 'post.php?post=' . $r['order_id'] . '&action=edit' ) ),
-                $r['order_id'],
-                esc_html( $r['trans_id'] ),
-                wc_price( $r['amount'] ),
-                esc_html( $r['status'] ),
-                esc_html( $r['created'] )
-            );
+        
+        if ( empty( $rows ) ) {
+            echo '<tr><td colspan="6">' . __( 'Chưa có giao dịch nào được khớp', 'mb-smart-payment-wc' ) . '</td></tr>';
+        } else {
+            foreach ( $rows as $r ) {
+                printf( '<tr><td>%d</td><td><a href="%s">#%d</a></td><td>%s</td><td class="amount">%s</td><td><span class="status %s">%s</span></td><td>%s</td></tr>',
+                    $r['id'],
+                    esc_url( admin_url( 'post.php?post=' . $r['order_id'] . '&action=edit' ) ),
+                    $r['order_id'],
+                    esc_html( $r['trans_id'] ),
+                    wc_price( $r['amount'] ),
+                    esc_attr( $r['status'] ),
+                    esc_html( $r['status'] ),
+                    esc_html( $r['created'] )
+                );
+            }
         }
         echo '</tbody></table>';
     }
