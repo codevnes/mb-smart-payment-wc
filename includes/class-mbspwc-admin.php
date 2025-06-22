@@ -48,18 +48,15 @@ class MBSPWC_Admin {
         echo '<div class="wrap"><h1>MBSB - ' . esc_html__( 'Trạng thái', 'mb-smart-payment-wc' ) . '</h1>';
 
         if ( $logged_in ) {
-            echo '<p>' . esc_html__( 'Đã đăng nhập.', 'mb-smart-payment-wc' ) . '</p>';
-            echo '<form method="post"><p>';
-            wp_nonce_field( 'mbsb_logout', 'mbsb_logout' );
-            submit_button( __( 'Đăng xuất', 'mb-smart-payment-wc' ) );
-            echo '</p></form>';
+            echo '<p id="mbsp-status">' . esc_html__( 'Đã đăng nhập', 'mb-smart-payment-wc' ) . '</p>';
+            echo '<a href="#" id="mbsp-logout" class="button button-secondary">' . esc_html__( 'Đăng xuất', 'mb-smart-payment-wc' ) . '</a>';
         } else {
-            echo '<p>' . esc_html__( 'Chưa đăng nhập.', 'mb-smart-payment-wc' ) . '</p>';
-            echo '<form method="post">';
-            wp_nonce_field( 'mbsb_login', 'mbsb_login_nonce' );
-            echo '<table class="form-table"><tr><th>' . __( 'User', 'mb-smart-payment-wc' ) . '</th><td><input type="text" name="mb_user" class="regular-text"/></td></tr>';
-            echo '<tr><th>' . __( 'Password', 'mb-smart-payment-wc' ) . '</th><td><input type="password" name="mb_pass" class="regular-text"/></td></tr></table>';
-            submit_button( __( 'Đăng nhập', 'mb-smart-payment-wc' ) );
+            echo '<p id="mbsp-status">' . esc_html__( 'Chưa đăng nhập', 'mb-smart-payment-wc' ) . '</p>';
+            echo '<form id="mbsp-login-form">';
+            wp_nonce_field( 'mbsp_admin', 'nonce' );
+            echo '<p><label>' . __( 'User', 'mb-smart-payment-wc' ) . ' <input type="text" id="mb_user" name="mb_user" class="regular-text"></label></p>';
+            echo '<p><label>' . __( 'Password', 'mb-smart-payment-wc' ) . ' <input type="password" id="mb_pass" name="mb_pass" class="regular-text"></label></p>';
+            echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Đăng nhập', 'mb-smart-payment-wc' ) . '</button></p>';
             echo '</form>';
         }
         echo '</div>';
