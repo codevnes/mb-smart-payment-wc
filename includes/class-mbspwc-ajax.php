@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class MBSPWC_Ajax {
     public static function init() {
-        $actions = [ 'login', 'status', 'logout', 'transactions', 'test_connection', 'check_payment' ];
+        $actions = [ 'login', 'status', 'logout', 'transactions', 'test_connection', 'check_payment', 'get_settings', 'save_settings', 'get_transaction_data' ];
         foreach ( $actions as $act ) {
             add_action( 'wp_ajax_mbsp_' . $act, [ __CLASS__, $act ] );
             add_action( 'wp_ajax_nopriv_mbsp_' . $act, [ __CLASS__, $act ] );
@@ -217,6 +217,67 @@ class MBSPWC_Ajax {
             'is_paid' => $order->is_paid(),
             'trans_id' => $trans_id,
             'db_status' => $db_status
+        ] );
+    }
+    
+    // Vue-specific endpoints
+    public static function get_settings() {
+        if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'mbsp_admin' ) ) {
+            wp_send_json_error( 'Invalid nonce' );
+        }
+        
+        $settings = get_option( 'mbspwc_settings', [] );
+        wp_send_json_success( $settings );
+    }
+    
+    public static function save_settings() {
+        if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'mbsp_admin' ) ) {
+            wp_send_json_error( 'Invalid nonce' );
+        }
+        
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Insufficient permissions' );
+        }
+        
+        $settings = json_decode( stripslashes( $_POST['settings'] ?? '{}' ), true );
+        
+        if ( json_last_error() !== JSON_ERROR_NONE ) {
+            wp_send_json_error( 'Invalid JSON data' );
+        }
+        
+        // Sanitize settings
+        $clean_settings = [];
+        $allowed_keys = [ 'user', 'pass', 'acc_no', 'acc_name' ];
+        
+        foreach ( $allowed_keys as $key ) {
+            if ( isset( $settings[$key] ) ) {
+                $clean_settings[$key] = sanitize_text_field( $settings[$key] );
+            }
+        }
+        
+        update_option( 'mbspwc_settings', $clean_settings );
+        wp_send_json_success( 'Settings saved successfully' );
+    }
+    
+    public static function get_transaction_data() {
+        if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'mbsp_admin' ) ) {
+            wp_send_json_error( 'Invalid nonce' );
+        }
+        
+        $orders = MBSPWC_DB::get_orders( 1000 );
+        $total_orders = count( $orders );
+        $completed_orders = count( array_filter( $orders, function( $order ) { return $order->status === 'completed'; } ) );
+        $pending_orders = count( array_filter( $orders, function( $order ) { return $order->status === 'pending'; } ) );
+        $total_amount = array_sum( array_map( function( $order ) { return $order->status === 'completed' ? $order->amount : 0; }, $orders ) );
+        
+        wp_send_json_success( [
+            'stats' => [
+                'total_orders' => $total_orders,
+                'completed_orders' => $completed_orders,
+                'pending_orders' => $pending_orders,
+                'total_amount' => $total_amount
+            ],
+            'orders' => array_slice( $orders, 0, 100 ) // Limit to 100 for performance
         ] );
     }
 }

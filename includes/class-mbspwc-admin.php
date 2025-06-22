@@ -19,6 +19,14 @@ class MBSPWC_Admin {
     }
 
     public static function status_page() {
+        $use_vue = get_option( 'mbspwc_use_vue', true );
+        
+        if ( $use_vue ) {
+            echo '<div id="mbsp-vue-admin"></div>';
+            return;
+        }
+        
+        // Fallback to traditional PHP rendering
         $opts = get_option( 'mbspwc_backend', [] );
         $logged_in = ! empty( $opts['token'] ) && ( $opts['expires'] ?? 0 ) > time();
 
@@ -112,16 +120,45 @@ class MBSPWC_Admin {
     }
     public static function assets( $hook ) {
         if ( strpos( $hook, 'mbsp' ) === false ) return;
-        wp_enqueue_script( 'mbsp-admin', MBSPWC_URL . 'assets/admin.js', [ 'jquery' ], MBSPWC_VERSION, true );
-        wp_localize_script( 'mbsp-admin', 'mbsp_admin', [
-            'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce'    => wp_create_nonce( 'mbsp_admin' ),
-            'i18n'     => [
-                'logged'     => __( 'Đã đăng nhập', 'mb-smart-payment-wc' ),
-                'not_logged' => __( 'Chưa đăng nhập', 'mb-smart-payment-wc' ),
-            ],
-        ] );
-        wp_enqueue_style( 'mbsp-admin', MBSPWC_URL . 'assets/admin.css', [], MBSPWC_VERSION );
+        
+        // Check if Vue mode is enabled
+        $use_vue = get_option( 'mbspwc_use_vue', true );
+        
+        if ( $use_vue ) {
+            // Load Vue.js from CDN
+            wp_enqueue_script( 'vue-js', 'https://unpkg.com/vue@3/dist/vue.global.js', [], '3.3.4', false );
+            
+            // Load Vue components and styles
+            wp_enqueue_script( 'mbsp-vue-components', MBSPWC_URL . 'assets/vue-components.js', [ 'vue-js' ], MBSPWC_VERSION, true );
+            wp_enqueue_style( 'mbsp-vue-admin', MBSPWC_URL . 'assets/vue-admin.css', [], MBSPWC_VERSION );
+            wp_enqueue_style( 'mbsp-admin', MBSPWC_URL . 'assets/admin.css', [], MBSPWC_VERSION );
+            
+            wp_localize_script( 'mbsp-vue-components', 'mbsp_admin', [
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'nonce' => wp_create_nonce( 'mbsp_admin' ),
+                'api_url' => MBSPWC_Backend::API_URL,
+                'use_vue' => true,
+                'i18n' => [
+                    'logged' => __( 'Đã đăng nhập MBBank', 'mb-smart-payment-wc' ),
+                    'not_logged' => __( 'Chưa đăng nhập MBBank', 'mb-smart-payment-wc' ),
+                ]
+            ] );
+        } else {
+            // Fallback to jQuery version
+            wp_enqueue_script( 'mbsp-admin', MBSPWC_URL . 'assets/admin.js', [ 'jquery' ], MBSPWC_VERSION, true );
+            wp_enqueue_style( 'mbsp-admin', MBSPWC_URL . 'assets/admin.css', [], MBSPWC_VERSION );
+            
+            wp_localize_script( 'mbsp-admin', 'mbsp_admin', [
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'nonce'    => wp_create_nonce( 'mbsp_admin' ),
+                'api_url' => MBSPWC_Backend::API_URL,
+                'use_vue' => false,
+                'i18n'     => [
+                    'logged'     => __( 'Đã đăng nhập', 'mb-smart-payment-wc' ),
+                    'not_logged' => __( 'Chưa đăng nhập', 'mb-smart-payment-wc' ),
+                ],
+            ] );
+        }
     }
 
 }

@@ -46,6 +46,14 @@ class MBSPWC_Settings {
     }
 
     public static function render() {
+        $use_vue = get_option( 'mbspwc_use_vue', true );
+        
+        if ( $use_vue ) {
+            echo '<div id="mbsp-vue-admin"></div>';
+            return;
+        }
+        
+        // Fallback to traditional PHP rendering
         echo '<div class="mbsp-admin-wrap">';
         
         // Header
