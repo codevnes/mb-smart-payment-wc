@@ -197,6 +197,16 @@ class MBSPWC_Ajax {
                 $status_class = 'mbsp-status-pending';
         }
 
+        // Get additional info from our database
+        $order_record = MBSPWC_DB::get_order_record( $order_id );
+        $trans_id = '';
+        $db_status = '';
+        
+        if ( $order_record ) {
+            $trans_id = $order_record->trans_id;
+            $db_status = $order_record->status;
+        }
+
         wp_send_json_success( [
             'status' => $status,
             'status_text' => $status_text,
@@ -204,7 +214,9 @@ class MBSPWC_Ajax {
             'order_total' => $order->get_total(),
             'order_date' => $order->get_date_created()->format( 'Y-m-d H:i:s' ),
             'payment_method' => $order->get_payment_method_title(),
-            'is_paid' => $order->is_paid()
+            'is_paid' => $order->is_paid(),
+            'trans_id' => $trans_id,
+            'db_status' => $db_status
         ] );
     }
 }

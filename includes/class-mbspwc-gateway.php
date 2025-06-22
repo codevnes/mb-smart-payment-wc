@@ -59,14 +59,12 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
     public function process_payment( $order_id ) {
         $order = wc_get_order( $order_id );
 
-        // Đặt trạng thái chờ thanh toán.
-        $order->update_status( 'on-hold', __( 'Chờ thanh toán qua MBBank', 'mb-smart-payment-wc' ) );
-
         // Lấy thông tin tài khoản từ settings
         $settings = get_option( 'mbspwc_settings', [] );
         $account_no = $settings['acc_no'] ?? '0123456789';
         $account_name = $settings['acc_name'] ?? 'Shop';
 
+        $qr_url = '';
         // Sinh QR VietQR
         if ( class_exists( 'MBSPWC_VietQR' ) ) {
             $qr_url = MBSPWC_VietQR::generate( $account_no, $account_name, $order->get_total(), $order_id );
@@ -74,6 +72,19 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
             $order->save();
             $order->add_order_note( sprintf( __( 'QR thanh toán: %s', 'mb-smart-payment-wc' ), $qr_url ) );
         }
+
+        // Lưu thông tin đơn hàng vào bảng riêng
+        MBSPWC_DB::create_order_record(
+            $order_id,
+            $order->get_total(),
+            trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
+            $order->get_billing_email(),
+            $order->get_customer_note(),
+            $qr_url
+        );
+
+        // Đặt trạng thái chờ thanh toán.
+        $order->update_status( 'on-hold', __( 'Chờ thanh toán qua MBBank', 'mb-smart-payment-wc' ) );
 
         return [
             'result'   => 'success',
@@ -205,7 +216,7 @@ class WC_Gateway_MBSPWC extends WC_Payment_Gateway {
      */
     public function frontend_styles() {
         if ( is_wc_endpoint_url( 'order-received' ) ) {
-            wp_enqueue_style( 'mbspwc-frontend', MBSPWC_URL . 'assets/admin.css', [], MBSPWC_VERSION );
+            wp_enqueue_style( 'mbspwc-frontend', MBSPWC_URL . 'assets/frontend.css', [], MBSPWC_VERSION );
             wp_enqueue_script( 'mbspwc-frontend', MBSPWC_URL . 'assets/frontend.js', [ 'jquery' ], MBSPWC_VERSION, true );
             
             // Localize script for AJAX

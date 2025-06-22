@@ -40,13 +40,11 @@ class MBSPWC_Transactions_Admin {
         echo '<tbody><tr><td colspan="4">' . __( 'Nhấn "Tải giao dịch" để xem dữ liệu', 'mb-smart-payment-wc' ) . '</td></tr></tbody>';
         echo '</table>';
 
-        // Matched Transactions
-        global $wpdb;
-        $table_name = $wpdb->prefix . MBSPWC_DB::TABLE;
-        $logs = $wpdb->get_results( "SELECT * FROM {$table_name} ORDER BY created DESC LIMIT 100", ARRAY_A );
+        // Order Records
+        $orders = MBSPWC_DB::get_orders( 100 );
 
-        echo '<h3>' . esc_html__( 'Giao dịch đã khớp đơn hàng', 'mb-smart-payment-wc' ) . '</h3>';
-        self::table_db( $logs );
+        echo '<h3>' . esc_html__( 'Đơn hàng MB Smart Payment', 'mb-smart-payment-wc' ) . '</h3>';
+        self::table_orders( $orders );
 
         echo '</div>';
         echo '</div>';
@@ -61,6 +59,60 @@ class MBSPWC_Transactions_Admin {
         echo '</tr></thead><tbody>';
         foreach ( $rows as $r ) {
             printf( '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( $r['trans_id'] ), wc_price( $r['amount'] ), esc_html( $r['description'] ), esc_html( $r['time'] ) );
+        }
+        echo '</tbody></table>';
+    }
+
+    protected static function table_orders( $orders ) {
+        echo '<table class="widefat"><thead><tr>';
+        echo '<th>ID</th>';
+        echo '<th>' . __( 'Đơn hàng', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Khách hàng', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Số tiền', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Trạng thái', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Mã GD', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Thời gian tạo', 'mb-smart-payment-wc' ) . '</th>';
+        echo '<th>' . __( 'Cập nhật', 'mb-smart-payment-wc' ) . '</th>';
+        echo '</tr></thead><tbody>';
+        
+        if ( empty( $orders ) ) {
+            echo '<tr><td colspan="8">' . __( 'Chưa có đơn hàng nào', 'mb-smart-payment-wc' ) . '</td></tr>';
+        } else {
+            foreach ( $orders as $order ) {
+                $status_class = '';
+                $status_text = '';
+                
+                switch ( $order->status ) {
+                    case 'pending':
+                        $status_class = 'pending';
+                        $status_text = 'Chờ thanh toán';
+                        break;
+                    case 'completed':
+                        $status_class = 'completed';
+                        $status_text = 'Đã thanh toán';
+                        break;
+                    case 'failed':
+                        $status_class = 'failed';
+                        $status_text = 'Thất bại';
+                        break;
+                    default:
+                        $status_class = 'pending';
+                        $status_text = ucfirst( $order->status );
+                }
+                
+                printf( '<tr><td>%d</td><td><a href="%s">#%d</a></td><td>%s</td><td class="amount">%s</td><td><span class="status %s">%s</span></td><td>%s</td><td>%s</td><td>%s</td></tr>',
+                    $order->id,
+                    esc_url( admin_url( 'post.php?post=' . $order->order_id . '&action=edit' ) ),
+                    $order->order_id,
+                    esc_html( $order->customer_name ?: $order->customer_email ),
+                    wc_price( $order->amount ),
+                    esc_attr( $status_class ),
+                    esc_html( $status_text ),
+                    esc_html( $order->trans_id ?: '-' ),
+                    esc_html( $order->created ),
+                    esc_html( $order->updated )
+                );
+            }
         }
         echo '</tbody></table>';
     }

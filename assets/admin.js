@@ -11,6 +11,23 @@
         $(element).removeClass('mbsp-loading').prop('disabled', false);
     }
 
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function formatAmount(amount) {
+        if (!amount || amount === '0') return '0 VND';
+        var num = parseFloat(amount);
+        if (isNaN(num)) return amount;
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(num);
+    }
+
     function updateStatusIndicator(logged_in, expires) {
         var $indicator = $('#mbsp-status-indicator');
         var $text = $('#mbsp-status-text');
@@ -137,13 +154,26 @@
                     hideLoading($btn);
                     var html = '';
                     
-                    if (res.items && res.items.length > 0) {
-                        res.items.forEach(function (r) { 
+                    // Parse the nested response structure
+                    var transactions = [];
+                    if (res.items && res.items.success && res.items.data) {
+                        transactions = res.items.data;
+                    } else if (res.items && Array.isArray(res.items)) {
+                        transactions = res.items;
+                    }
+                    
+                    if (transactions.length > 0) {
+                        transactions.forEach(function (r) { 
+                            var amount = r.creditAmount || r.debitAmount || r.amount || '0';
+                            var refNo = r.refNo || r.transactionId || r.trans_id || 'N/A';
+                            var desc = r.transactionDesc || r.description || 'N/A';
+                            var date = r.transactionDate || r.postDate || r.time || 'N/A';
+                            
                             html += '<tr>';
-                            html += '<td>' + (r.trans_id || r.transactionId || 'N/A') + '</td>';
-                            html += '<td class="amount">' + (r.amount || r.creditAmount || '0') + '</td>';
-                            html += '<td>' + (r.description || r.description || 'N/A') + '</td>';
-                            html += '<td>' + (r.time || r.transactionDate || 'N/A') + '</td>';
+                            html += '<td>' + escapeHtml(refNo) + '</td>';
+                            html += '<td class="amount">' + formatAmount(amount) + '</td>';
+                            html += '<td>' + escapeHtml(desc) + '</td>';
+                            html += '<td>' + escapeHtml(date) + '</td>';
                             html += '</tr>';
                         });
                     } else {

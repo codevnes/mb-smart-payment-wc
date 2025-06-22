@@ -102,7 +102,7 @@ class MBSPWC_Cron {
         // Check if this transaction was already processed
         $table_name = $wpdb->prefix . MBSPWC_DB::TABLE;
         $existing = $wpdb->get_var( $wpdb->prepare( 
-            "SELECT id FROM {$table_name} WHERE trans_id = %s", 
+            "SELECT id FROM {$table_name} WHERE trans_id = %s AND trans_id != ''", 
             $trans_id 
         ) );
         
@@ -133,9 +133,9 @@ class MBSPWC_Cron {
             wc_price( $amount ) 
         ) );
 
-        // Log to database
+        // Update database record
         if ( class_exists( 'MBSPWC_DB' ) ) {
-            MBSPWC_DB::log( $order_id, $trans, 'matched' );
+            MBSPWC_DB::update_order_status( $order_id, 'completed', $trans_id, $trans );
         }
     }
 }
