@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Ngăn truy cập trực tiếp
 define( 'MBSPWC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'MBSPWC_URL', plugin_dir_url( __FILE__ ) );
 
+define( 'MBSPWC_VERSION', '1.0.0' );
 // Nạp sớm file DB để dùng trong activation hook
 require_once MBSPWC_PATH . 'includes/class-mbspwc-db.php';
 
